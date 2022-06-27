@@ -27,7 +27,7 @@ public class CartaoServiceImpl implements CartaoService{
 
 	@Override
 	public CartaoDTO addCartao(CartaoDTO dto) {
-		Cartao cartao = new Cartao();
+		var cartao = new Cartao();
 		this.mapper.map(dto, cartao);
 		
 		Long valor = 500L;
@@ -43,6 +43,14 @@ public class CartaoServiceImpl implements CartaoService{
 	@Override
 	public Optional<Cartao> findById(Long numeroCartao) {
 		return cartaoRepository.findById(numeroCartao);
+	}
+
+
+	@Override
+	public Cartao realizarTransacao(CartaoDTO dto) {
+		var cartao = cartaoRepository.findById(dto.getNumeroCartao()).get();
+		cartao.setSaldo(cartao.getSaldo() - dto.getValor());
+		return cartaoRepository.save(cartao);
 	}
 
 }

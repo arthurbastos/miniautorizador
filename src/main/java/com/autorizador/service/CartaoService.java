@@ -10,5 +10,7 @@ public interface CartaoService {
 	public CartaoDTO addCartao(CartaoDTO dto);
 	
 	public Optional<Cartao> findById(Long numeroCartao);
+	
+	public Cartao realizarTransacao(CartaoDTO dto);
 
 }

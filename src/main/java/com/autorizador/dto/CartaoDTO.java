@@ -10,5 +10,5 @@ public class CartaoDTO {
 
 	private Long senha;
 	
-	private Long saldo;
+	private Long valor;
 }
