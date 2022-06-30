@@ -9,6 +9,9 @@ import com.autorizador.entity.Cartao;
 import com.autorizador.respository.CartaoRepository;
 import com.autorizador.service.CartaoService;
 import com.github.dozermapper.core.Mapper;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CartaoServiceImpl implements CartaoService{
@@ -47,6 +50,7 @@ public class CartaoServiceImpl implements CartaoService{
 
 
 	@Override
+	@Transactional(isolation = Isolation.REPEATABLE_READ)
 	public Cartao realizarTransacao(CartaoDTO dto) {
 		var cartao = cartaoRepository.findById(dto.getNumeroCartao()).get();
 		cartao.setSaldo(cartao.getSaldo() - dto.getValor());

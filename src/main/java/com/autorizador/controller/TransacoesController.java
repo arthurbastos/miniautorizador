@@ -2,6 +2,7 @@ package com.autorizador.controller;
 
 import java.util.Optional;
 
+import com.autorizador.util.TransacaoEnun;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +29,9 @@ public class TransacoesController {
 	public ResponseEntity<?> realizarTransacao(@RequestBody CartaoDTO dto){
 		
 		Optional<Cartao> cartao = cartaoService.findById(dto.getNumeroCartao());
-		
+
+		TransacaoEnun enumEscolido = null;
+
 		if (cartao.isPresent()) {
 			
 			if (cartao.get().getSenha().equals(dto.getSenha())) {
@@ -37,15 +40,17 @@ public class TransacoesController {
 					
 					return ResponseEntity.status(HttpStatus.CREATED).build();
 				}else {
-					return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("SALDO_INSUFICIENTE");
+					enumEscolido  = TransacaoEnun.valueOf("SALDO_INSUFICIENTE");
 				}
 			}else {
-				return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("SENHA_INVALIDA");
+				enumEscolido  = TransacaoEnun.valueOf("SENHA_INVALIDA");
 			}
 			
 		}else {
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("CARTAO_INEXISTENTE");
+			enumEscolido  = TransacaoEnun.valueOf("CARTAO_INEXISTENTE");
 		}
+
+		return ResponseEntity.unprocessableEntity().body(enumEscolido);
 		
 	}
 }
